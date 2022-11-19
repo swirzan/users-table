@@ -1,0 +1,21 @@
+table,th,td{
+    width: 1000px;
+    margin: auto;
+    font-size: 15px;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #000;
+    border-collapse: collapse;
+}
+.superAdminColor {
+    background-color: yellowgreen;
+}
+.adminColor {
+    background-color: yellow;
+}
+.managerColor {
+    background-color: aqua;
+}
+.staffColor {
+    background-color: wheat;
+}
