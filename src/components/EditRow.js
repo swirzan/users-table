@@ -1,4 +1,5 @@
 import React from "react";
+import { Switch } from "antd";
 
 const EditRow = (props) => {
   const editItemId = props.editItemId;
@@ -22,7 +23,6 @@ const EditRow = (props) => {
       item.id === editItemId.id ? { ...tableData, ...editItemId } : item
     );
     setTableData(updatedData);
-    setEditing(false);
   };
 
   return (
@@ -33,20 +33,19 @@ const EditRow = (props) => {
         value={editItemId.username}
         onChange={changeHandler}
       />
-
       <input
         type="email"
         name="email"
         value={editItemId.email}
         onChange={changeHandler}
       />
-
       <input
         type="number"
         name="age"
         value={editItemId.age}
         onChange={changeHandler}
       />
+
       <button onClick={submitHandler}>Update</button>
       <button>Cancel</button>
     </form>

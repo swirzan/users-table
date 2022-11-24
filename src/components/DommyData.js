@@ -9,38 +9,24 @@ const DommyData = () => {
   const [tableData, setTableData] = useState(dommyData);
   const [editItemId, setEditItemId] = useState("");
   const [editing, setEditing] = useState(false);
-  const [username, setUsername] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [userAccess, setuserAccess] = useState("");
+  const [newUser, setNewUser] = useState("");
+  // const [userAccess, setUserAccess] = useState("");
+  const [searchBar, setSearchBar] = useState("");
 
-  const onAddUsername = (e) => {
-    setUsername(e.target.value);
-  };
-  const onAddUserAge = (e) => {
-    setAge(e.target.value);
-  };
-  const onAddUserEmail = (e) => {
-    setEmail(e.target.value);
-  };
-  const onAddUserAccess = (e) => {
-    setuserAccess(e.target.value);
+  const onAddUser = (e) => {
+    setNewUser((pre) => ({
+      ...pre,
+      [e.target.name]: e.target.value,
+    }));
+    console.log(setNewUser);
   };
 
-  const addUserHandler = (event) => {
-    const newUser = {
-      id: new Date().getTime(),
-      username: username,
-      age: age,
-      email: email,
-      userAccess: userAccess,
-    };
+  const submitHandler = (e) => {
+    e.preventDefault();
     setTableData((pre) => {
-      return [...pre, newUser];
+      return [tableData, ...pre];
     });
-    setUsername("");
-    setAge("");
-    setEmail("");
+    console.log(tableData);
   };
 
   const deleteHandler = (id) => {
@@ -77,6 +63,7 @@ const DommyData = () => {
             marginRight: "340px",
           }}
           placeholder="Search"
+          onChange={(e) => setSearchBar(e.target.value)}
           enterButton
         />
         <br />
@@ -92,40 +79,45 @@ const DommyData = () => {
               <th>Actions</th>
             </tr>
           </thead>
-          {tableData.map((item) => {
-            return (
-              <tbody key={item.id}>
-                <tr>
-                  <td>{item.username}</td>
-                  <td>{item.email}</td>
-                  <td>{item.age}</td>
-                  <td
-                    className={
-                      item.userAccess.toLocaleLowerCase() === "super admin"
-                        ? "superAdminColor"
-                        : item.userAccess.toLocaleLowerCase() === "admin"
-                        ? "adminColor"
-                        : item.userAccess.toLocaleLowerCase() === "manager"
-                        ? "managerColor"
-                        : item.userAccess.toLocaleLowerCase() === "staff"
-                        ? "staffColor"
-                        : ""
-                    }
-                  >
-                    {item.userAccess}
-                  </td>
-                  <td>
-                    {item.accountStatus ? (
-                      <Switch defaultChecked />
-                    ) : (
-                      <Switch defaultuUnChecked />
-                    )}
-                  </td>
-                  {currentUser.userAccess === "staff" ||
+          {tableData
+            .filter(
+              (item) => item.username.toLocaleLowerCase().includes(searchBar)
+              // item.email.toLocaleLowerCase().includes(searchBar)
+            )
+            .map((item) => {
+              return (
+                <tbody key={item.id}>
+                  <tr>
+                    <td>{item.username}</td>
+                    <td>{item.email}</td>
+                    <td>{item.age}</td>
+                    <td
+                      className={
+                        item.userAccess.toLocaleLowerCase() === "super admin"
+                          ? "superAdminColor"
+                          : item.userAccess.toLocaleLowerCase() === "admin"
+                          ? "adminColor"
+                          : item.userAccess.toLocaleLowerCase() === "manager"
+                          ? "managerColor"
+                          : item.userAccess.toLocaleLowerCase() === "staff"
+                          ? "staffColor"
+                          : ""
+                      }
+                    >
+                      {item.userAccess}
+                    </td>
+                    <td>
+                      {item.accountStatus ? (
+                        <Switch defaultChecked disabled={true} />
+                      ) : (
+                        <Switch defaultuUnChecked disabled={true} />
+                      )}
+                    </td>
+                    {/* {currentUser.userAccess === "staff" ||
                   currentUser.userAccess === "manager" ? (
                     ""
-                  ) : (
-                    <td>
+                  ) : ( */}
+                    <td className="restricted">
                       <EditOutlined
                         style={{ marginRight: "15px" }}
                         onClick={() => {
@@ -140,11 +132,11 @@ const DommyData = () => {
                         }}
                       />
                     </td>
-                  )}
-                </tr>
-              </tbody>
-            );
-          })}
+                    {/* )} */}
+                  </tr>
+                </tbody>
+              );
+            })}
         </table>
       </div>
       <h3>Add New User</h3>
@@ -152,31 +144,24 @@ const DommyData = () => {
         type="text"
         name="username"
         placeholder="Enter your Name"
-        value={username}
-        onChange={onAddUsername}
+        value={newUser.username}
+        onChange={onAddUser}
       />
       <input
         type="email"
         name="email"
         placeholder="Enter your Email"
-        value={email}
-        onChange={onAddUserEmail}
+        value={newUser.email}
+        onChange={onAddUser}
       />
       <input
         type="number"
         name="age"
         placeholder="Enter your age"
-        value={age}
-        onChange={onAddUserAge}
+        value={newUser.age}
+        onChange={onAddUser}
       />
-      {/* <input
-        type="text"
-        name="userAccess"
-        placeholder="Selete your user access"
-        value={userAccess}
-        onChange={onAddUserAccess}
-      /> */}
-      <select value={userAccess} onChange={onAddUserAccess}>
+      <select value={newUser.userAccess} onChange={onAddUser}>
         <option value="" disable selected hidden>
           Select Your Rank
         </option>
@@ -185,13 +170,7 @@ const DommyData = () => {
         <option>Manager</option>
         <option>Staff</option>
       </select>
-      <button
-        onClick={() => {
-          addUserHandler();
-        }}
-      >
-        Add
-      </button>
+      <button onClick={submitHandler}>Add</button>
     </>
   );
 };
